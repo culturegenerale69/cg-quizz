@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>CG.quizz | Quiz de culture générale</title>
+
+<meta name="description"
+content="Teste tes connaissances avec CG.quizz !">
+
+<style>
+
+/* ==============================
+STYLE GÉNÉRAL
+============================== */
+
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+}
+
+[hidden] {
+display: none !important;
+}
+
+body {
+min-height: 100vh;
+margin: 0;
+padding: 30px 15px;
+
+font-family: Georgia, serif;
+color: #174b43;
+
+background-image: url("fond.vintage.PNG");
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+background-attachment: fixed;
+
+display: flex;
+justify-content: center;
+align-items: flex-start;
+
+overscroll-behavior-y: none;
+}
+
+
+/* ==============================
+CONTENEUR PRINCIPAL
+============================== */
+
+.quiz-container {
+width: 100%;
+max-width: 850px;
+
+margin-left: auto;
+margin-right: auto;
+
+margin-top: auto;
+margin-bottom: auto;
+
+padding: 35px;
+
+text-align: center;
+
+background: rgba(255, 249, 232, 0.94);
+
+border: 3px solid #174b43;
+border-radius: 28px;
+
+box-shadow: 0 10px 30px rgba(23, 61, 104, 0.15);
+}
+
+/* ==============================
+LOGO
+============================== */
+
+.quiz-title {
+margin-bottom: 25px;
+}
+
+.logo-titre {
+display: block;
+
+width: 210px;
+max-width: 75%;
+
+height: auto;
+
+margin: 0 auto;
+}
+
+/* ==============================
+INFORMATIONS DU QUIZ
+============================== */
+
+.quiz-info {
+display: flex;
+justify-content: space-between;
+align-items: center;
+
+gap: 15px;
+
+margin-bottom: 15px;
+
+font-size: 1.05rem;
+font-weight: bold;
+}
+
+#question-counter {
+color: #173d68;
+}
+
+#timer {
+color: #a83222;
+
+background: #ffe1d8;
+
+padding: 9px 15px;
+
+border-radius: 12px;
+
+white-space: nowrap;
+}
+
+#timer.urgent {
+color: #ffffff;
+background: #c62828;
+
+animation: pulse 0.7s infinite alternate;
+}
+
+@keyframes pulse {
+from {
+transform: scale(1);
+}
+
+to {
+transform: scale(1.06);
+}
+}
+
+/* ==============================
+BARRE DE PROGRESSION
+============================== */
+
+.progress-track {
+width: 100%;
+height: 14px;
+
+margin-bottom: 30px;
+
+overflow: hidden;
+
+background: #e5d6bd;
+
+border: 1px solid #b8a98c;
+border-radius: 20px;
+}
+
+.progress-bar {
+width: 0%;
+height: 100%;
+
+background: linear-gradient(
+90deg,
+#087fba,
+#12b7cb
+);
+
+border-radius: 20px;
+
+transition: width 0.4s ease;
+}
+
+/* ==============================
+QUESTION
+============================== */
+
+.question-text {
+margin-bottom: 28px;
+
+font-size: clamp(1.3rem, 4vw, 1.8rem);
+line-height: 1.5;
+
+color: #173d68;
+}
+
+/* ==============================
+RÉPONSES
+============================== */
+
+.answers {
+display: grid;
+
+grid-template-columns: repeat(2, minmax(0, 1fr));
+
+gap: 15px;
+
+margin-bottom: 20px;
+}
+
+.answer-button {
+min-height: 65px;
+
+padding: 16px;
+
+font-family: inherit;
+font-size: 1.05rem;
+font-weight: bold;
+
+color: #173d68;
+background: #fffdf7;
+
+border: 2px solid #b6c5d3;
+border-radius: 15px;
+
+cursor: pointer;
+
+transition:
+background-color 0.2s,
+color 0.2s,
+border-color 0.2s,
+transform 0.2s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+.answer-button:not(:disabled):hover {
+background: #e2f3ff;
+border-color: #087fba;
+transform: translateY(-2px);
+}
+}
+
+.answer-button {
+-webkit-tap-highlight-color: transparent;
+}
+
+.answer-button:focus-visible,
+.action-button:focus-visible {
+outline: 4px solid #f2a900;
+outline-offset: 3px;
+}
+
+/* BONNE RÉPONSE : VERT BIEN VISIBLE */
+
+.answer-button.correct {
+color: #ffffff !important;
+
+background: #087a32 !important;
+
+border: 4px solid #045522 !important;
+
+box-shadow: 0 0 0 3px rgba(8, 122, 50, 0.2);
+
+animation: correctPop 0.3s ease;
+}
+
+/* MAUVAISE RÉPONSE : ROUGE BIEN VISIBLE */
+
+.answer-button.wrong {
+color: #ffffff !important;
+
+background: #d71920 !important;
+
+border: 4px solid #941018 !important;
+
+box-shadow: 0 0 0 3px rgba(215, 25, 32, 0.2);
+
+animation: wrongShake 0.3s ease;
+}
+
+.answer-button:disabled {
+cursor: default;
+opacity: 1;
+}
+
+@keyframes correctPop {
+0% {
+transform: scale(0.96);
+}
+
+100% {
+transform: scale(1);
+}
+}
+
+@keyframes wrongShake {
+0%, 100% {
+transform: translateX(0);
+}
+
+25% {
+transform: translateX(-4px);
+}
+
+75% {
+transform: translateX(4px);
+}
+}
+
+/* ==============================
+MESSAGE DE CORRECTION
+============================== */
+
+.feedback {
+min-height: 32px;
+
+margin-top: 10px;
+
+font-size: 1.05rem;
+font-weight: bold;
+line-height: 1.5;
+}
+
+.feedback.success {
+color: #056b2a;
+}
+
+.feedback.error {
+color: #c4161c;
+}
+
+/* ==============================
+RÉSULTATS
+============================== */
+
+.result-title {
+margin-bottom: 20px;
+
+font-size: clamp(2rem, 5vw, 2.8rem);
+
+color: #173d68;
+}
+
+.result-score {
+margin-bottom: 12px;
+
+font-size: 1.5rem;
+font-weight: bold;
+}
+
+.result-grade {
+margin: 15px 0;
+
+font-size: clamp(4rem, 12vw, 6rem);
+font-weight: bold;
+
+color: #087fba;
+
+text-shadow: 2px 3px 0 rgba(23, 61, 104, 0.12);
+}
+
+.result-grade.grade-excellent {
+color: #087a32;
+}
+
+.result-grade.grade-medium {
+color: #b76b00;
+}
+
+.result-grade.grade-low {
+color: #c4161c;
+}
+
+.result-time {
+margin-bottom: 22px;
+
+font-size: 1.15rem;
+font-weight: bold;
+}
+
+.result-message {
+max-width: 600px;
+
+margin: 0 auto 25px;
+
+font-size: 1.1rem;
+line-height: 1.7;
+}
+
+/* ==============================
+ICÔNES YOUTUBE ET TIKTOK
+============================== */
+
+.result-links {
+display: flex;
+justify-content: center;
+align-items: center;
+
+gap: 25px;
+
+margin: 25px 0 30px;
+}
+
+.social-link {
+display: inline-flex;
+justify-content: center;
+align-items: center;
+
+width: 65px;
+height: 65px;
+
+background: #ffffff;
+
+border: 2px solid #d9c8a7;
+border-radius: 18px;
+
+transition:
+transform 0.2s,
+box-shadow 0.2s;
+}
+
+.social-link:hover {
+transform: translateY(-5px);
+
+box-shadow: 0 7px 15px rgba(23, 61, 104, 0.18);
+}
+
+.social-link img {
+display: block;
+
+width: 38px;
+height: 38px;
+
+object-fit: contain;
+}
+
+/* ==============================
+BOUTONS D'ACTION
+============================== */
+
+.result-actions {
+display: flex;
+justify-content: center;
+flex-wrap: wrap;
+
+gap: 15px;
+
+margin-top: 20px;
+}
+
+.action-button {
+display: inline-flex;
+justify-content: center;
+align-items: center;
+
+min-height: 52px;
+
+padding: 14px 24px;
+
+font-family: inherit;
+font-size: 1rem;
+font-weight: bold;
+
+text-decoration: none;
+
+border: 2px solid transparent;
+border-radius: 50px;
+
+cursor: pointer;
+
+transition:
+transform 0.2s,
+background-color 0.2s;
+}
+
+.action-button:hover {
+transform: translateY(-3px);
+}
+
+.restart-button {
+color: #ffffff;
+background: #087fba;
+
+border-color: #075b8a;
+}
+
+.restart-button:hover {
+background: #075b8a;
+}
+
+.home-button {
+color: #174b43;
+background: #f4d18f;
+
+border-color: #c78d36;
+}
+
+.home-button:hover {
+background: #edbd68;
+}
+
+/* ==============================
+RESPONSIVE : TÉLÉPHONES
+============================== */
+
+@media (max-width: 520px) {
+
+body {
+padding: 12px;
+background-attachment: scroll;
+}
+
+.quiz-container {
+padding: 22px 16px;
+
+border-radius: 20px;
+}
+
+.logo-titre {
+width: 175px;
+}
+
+.quiz-info {
+font-size: 0.9rem;
+}
+
+.answers {
+grid-template-columns: 1fr;
+gap: 12px;
+}
+
+.answer-button {
+min-height: 58px;
+font-size: 1rem;
+}
+
+.result-message {
+font-size: 1rem;
+}
+
+.result-actions {
+flex-direction: column;
+}
+
+.action-button {
+width: 100%;
+}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+*,
+*::before,
+*::after {
+animation-duration: 0.01ms !important;
+animation-iteration-count: 1 !important;
+transition-duration: 0.01ms !important;
+}
+
+}
+
+/* LOGO CG.QUIZZ */
+
+.quiz-header {
+width: 100%;
+text-align: center;
+margin-bottom: 25px;
+}
+
+.quiz-logo {
+display: block;
+width: 240px;
+max-width: 85%;
+height: auto;
+margin: 0 auto;
+object-fit: contain;
+}
+
+.quiz-header a {
+display: inline-block;
+line-height: 0;
+}
+
+/* ADAPTATION AUX TÉLÉPHONES */
+
+@media (max-width: 520px) {
+.quiz-logo {
+width: 200px;
+max-width: 75%;
+}
+}
+
+/* ===================================
+ANIMATION DES RÉSULTATS
+=================================== */
+
+/* Apparition progressive du résultat */
+
+#result-screen.celebration-active {
+animation: resultAppear 0.8s ease-out both;
+}
+
+@keyframes resultAppear {
+from {
+opacity: 0;
+transform: translateY(25px);
+}
+
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+/* Animation de la note finale */
+
+#result-screen.celebration-active .result-grade {
+animation: gradeCelebrate 1s ease-out 0.3s both;
+}
+
+@keyframes gradeCelebrate {
+0% {
+opacity: 0;
+transform: scale(0.3) rotate(-12deg);
+}
+
+60% {
+opacity: 1;
+transform: scale(1.2) rotate(4deg);
+}
+
+80% {
+transform: scale(0.95) rotate(-2deg);
+}
+
+100% {
+opacity: 1;
+transform: scale(1) rotate(0);
+}
+}
+
+/* Conteneur des confettis */
+
+.confetti-container {
+position: fixed;
+inset: 0;
+
+overflow: hidden;
+pointer-events: none;
+
+z-index: 9999;
+}
+
+/* Chaque confetti */
+
+.confetti {
+position: absolute;
+
+top: -20px;
+
+width: 10px;
+height: 16px;
+
+border-radius: 3px;
+
+animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+0% {
+transform: translate3d(0, -20px, 0) rotate(0deg);
+opacity: 1;
+}
+
+100% {
+transform: translate3d(var(--drift), 110vh, 0)
+rotate(var(--rotation));
+opacity: 0;
+}
+}
+
+/* Respecter les préférences d'accessibilité */
+
+@media (prefers-reduced-motion: reduce) {
+#result-screen.celebration-active,
+#result-screen.celebration-active .result-grade {
+animation: none;
+}
+
+.confetti {
+display: none;
+}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<main class="quiz-container">
+
+<!-- LOGO HORIZONTAL -->
+
+<div class="quiz-header">
+	<a href="index.html" aria-label="Retour à l'accueil">
+		<img
+			src="cg.quizz logo.png"
+			alt="CG-quizz"
+			class="quiz-logo"
+		>
+	</a>
+</div>
+
+
+<!-- ÉCRAN DES QUESTIONS -->
+
+<section id="question-screen">
+
+<!-- Informations du quiz -->
+
+<div class="quiz-info">
+
+<span id="question-counter">
+Question 1/10
+</span>
+
+<span id="timer">
+⏱️ 15 s
+</span>
+
+</div>
+
+
+<!-- Barre de progression -->
+
+<div
+class="progress-track"
+role="progressbar"
+aria-label="Progression du quiz"
+aria-valuemin="0"
+aria-valuemax="10"
+aria-valuenow="0"
+>
+
+<div
+class="progress-bar"
+id="progress-bar"
+></div>
+
+</div>
+
+
+<!-- Question -->
+
+<h2
+class="question-text"
+id="question-text"
+></h2>
+
+
+<!-- Réponses générées par JavaScript -->
+
+<div
+class="answers"
+id="answers"
+></div>
+
+
+<!-- Message de correction -->
+
+<p
+class="feedback"
+id="feedback"
+aria-live="polite"
+></p>
+
+</section>
+
+
+<!-- ÉCRAN DES RÉSULTATS -->
+
+<section id="result-screen" hidden>
+
+<h2 class="result-title">
+Quiz terminé !
+</h2>
+
+
+<p
+class="result-score"
+id="result-score"
+></p>
+
+
+<p
+class="result-grade"
+id="result-grade"
+></p>
+
+
+<p
+class="result-time"
+id="result-time"
+></p>
+
+
+<p
+class="result-message"
+id="result-message"
+></p>
+
+
+<!-- RÉSEAUX SOCIAUX -->
+
+<div class="result-links">
+
+<a
+class="social-link"
+href="https://youtube.com/@culture.generale69?si=cF1Rbsw-HnzDqtBV"
+target="_blank"
+rel="noopener noreferrer"
+aria-label="Visiter YouTube"
+>
+
+<img
+src="youtube.logo.png"
+alt="YouTube"
+>
+
+</a>
+
+
+<a
+class="social-link"
+href="https://www.tiktok.com/@culture.generale69?_r=1&_t=ZS-9Ay9IFy0VJG"
+target="_blank"
+rel="noopener noreferrer"
+aria-label="Visiter TikTok"
+>
+
+<img
+src="tiktok.logo.png"
+alt="TikTok"
+>
+
+</a>
+
+</div>
+
+
+<!-- BOUTONS -->
+
+<div class="result-actions">
+
+<button
+id="restart-button"
+class="action-button restart-button"
+type="button"
+>
+↻ Faire un autre quiz
+</button>
+
+
+<a
+href="index.html"
+class="action-button home-button"
+>
+⌂ Retour à l'accueil
+</a>
+
+</div>
+
+</section>
+
+</main>
+
+
+<script src="quiz.js"></script>
+
+</body>
+
+</html>

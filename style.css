@@ -1,0 +1,185 @@
+/* REGLAGES GENERAUX */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Georgia, serif;
+    color: #174b43;
+
+    /* Image d'arrière-plan */
+    background-image: url("fond.vintage.png");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    /* Positionnement du contenu */
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+    padding: 35px 20px;
+}
+
+
+/* CONTENU PRINCIPAL */
+
+.container {
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* LOGO ORIGINAL */
+
+.logo {
+    display: block;
+    width: 220px;
+    max-width: 70%;
+    height: auto;
+    margin-bottom: 25px;
+}
+
+/* LOGO PRINCIPAL CG.QUIZZ */
+
+.logo-principal {
+    display: block;
+    width: 100%;
+    max-width: 450px;
+    height: auto;
+    margin: 0 auto 25px;
+}
+
+/* TITRE CG.QUIZZ */
+
+h1 {
+    font-size: clamp(3rem, 8vw, 5rem);
+    margin-bottom: 20px;
+    font-weight: bold;
+    letter-spacing: -2px;
+    line-height: 1.1;
+}
+
+.cg {
+    color: #173d68;
+}
+
+.quizz {
+    color: #d52f20;
+    font-family: Impact, fantasy;
+    letter-spacing: -1px;
+}
+
+/* SLOGAN */
+
+.slogan {
+    font-size: 1.3rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* BOUTON COMMENCER */
+
+.start-button {
+    display: inline-block;
+    background-color: #07594f;
+    color: #fff1d2;
+
+    border: 3px solid #063f39;
+    border-radius: 50px;
+
+    padding: 18px 35px;
+    font-family: Georgia, serif;
+    font-size: 1.1rem;
+    font-weight: bold;
+
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.start-button:hover {
+    background-color: #0b7465;
+    transform: scale(1.04);
+}
+
+.start-button:focus-visible {
+    outline: 3px solid #173d68;
+    outline-offset: 4px;
+}
+
+/* TELEPHONES */
+
+@media (max-width: 480px) {
+    .logo {
+        width: 180px;
+    }
+
+.logo-principal {
+width: 100%;
+max-width: 350px;
+}
+    h1 {
+        font-size: 3rem;
+    }
+
+    .slogan {
+        font-size: 1.1rem;
+    }
+
+    .start-button {
+        padding: 15px 24px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        background-position: center center;
+        background-attachment: scroll;
+        padding: 25px 15px;
+    }
+
+    .container {
+        max-width: 100%;
+    }
+}
+
+/* ICÔNES DES RÉSEAUX SOCIAUX */
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 22px;
+    margin-top: 30px;
+}
+
+.social-icon {
+    display: block;
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+.social-links a:hover .social-icon {
+    transform: scale(1.12);
+}
+
+/* ADAPTATION AUX PETITS ÉCRANS */
+
+@media (max-width: 480px) {
+    .social-icon {
+        width: 30px;
+        height: 30px;
+    }
+}
